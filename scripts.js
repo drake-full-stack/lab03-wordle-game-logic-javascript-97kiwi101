@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     logDebug("💡 Try typing letters, pressing Backspace, or Enter", 'info');
 });
 
+
 // ===== YOUR CHALLENGE: IMPLEMENT THESE FUNCTIONS =====
 
 // TODO: Add keyboard event listener
@@ -72,10 +73,55 @@ document.addEventListener('DOMContentLoaded', function() {
 //     // Your code here!
 // });
 
+
+document.addEventListener("keydown", (event) => {
+    if(gameOver == false){
+        let input = event.key;
+        input = input.toUpperCase();
+        logDebug(input);
+        if(input.length === 1 && input >= 'A' && input <= 'Z'){
+            logDebug('is a letter');
+            addLetter(input);
+        }
+        else if(input == 'BACKSPACE'){
+            logDebug('Backspace does work');
+            deleteLetter();
+        }
+        else if(input == 'ENTER'){
+            logDebug('enter was hit');
+            submitGuess();
+        }
+        else{
+            logDebug('was ignored');
+        }
+    }
+});
+
+
 // TODO: Implement addLetter function
 // function addLetter(letter) {
 //     // Your code here!
 // }
+
+
+function addLetter(letter) {
+    logDebug(`🎯 addLetter("${letter}") called`, 'info');
+
+    if(currentTile >= 5){
+        logDebug("full");
+        return;
+    }
+
+    const rowElement = rows[currentRow];
+    const tiles = rowElement.querySelectorAll('.tile');
+    const specificTile = tiles[currentTile];
+    specificTile.textContent = letter;
+    specificTile.classList.add('filled');
+    logDebug(`"${letter}" was added at "${currentTile}" tile`);
+    currentTile += 1;
+    getCurrentWord()
+}
+
 
 // TODO: Implement deleteLetter function  
 // function deleteLetter() {
