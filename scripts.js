@@ -119,7 +119,7 @@ function addLetter(letter) {
     specificTile.classList.add('filled');
     logDebug(`"${letter}" was added at "${currentTile}" tile`);
     currentTile += 1;
-    getCurrentWord()
+    logDebug(`"${getCurrentWord()}" current word status`)
 }
 
 
@@ -127,6 +127,25 @@ function addLetter(letter) {
 // function deleteLetter() {
 //     // Your code here!
 // }
+
+
+function deleteLetter() {
+    logDebug(`🗑️ deleteLetter() called`, 'info');
+    if (currentTile <= 0) {
+        logDebug("No letters in current row")
+        return;
+    }
+    
+    currentTile--;
+    const rowElement = rows[currentRow];
+    const tiles = rowElement.querySelectorAll('.tile');
+    const specificTile = tiles[currentTile];
+    logDebug(`"${specificTile.textContent}" was removed at "${currentTile}" tile`);
+    specificTile.textContent = '';
+    specificTile.classList.remove('filled');
+    logDebug(`"${getCurrentWord()}" current word status`)
+}
+
 
 // TODO: Implement submitGuess function
 // function submitGuess() {
