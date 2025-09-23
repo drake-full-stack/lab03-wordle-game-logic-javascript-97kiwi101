@@ -1,5 +1,5 @@
 // ===== GAME STATE VARIABLES =====
-const TARGET_WORD = "WORDS";  // Our secret word for testing
+const TARGET_WORD = "KIWIS";  // Our secret word for testing
 let currentRow = 0;           // Which row we're filling (0-5)
 let currentTile = 0;          // Which tile in the row (0-4)
 let gameOver = false;         // Is the game finished?
@@ -167,20 +167,20 @@ function submitGuess() {
         guess += tile.textContent; 
     });
     logDebug(`guess is "${guess}" target is "${TARGET_WORD}"`)
-    //checkGuess(guess, tiles)
+    logDebug(checkGuess(guess, tiles));
     currentRow += 1;
     currentTile = 0;
     if (guess === TARGET_WORD) {
         gameOver = true;
         setTimeout(alert("YOU HAVE WON!"), 500);
-        logDebug("won")
+        logDebug("won");
     } else if (currentRow >= 6) {
         gameOver = true; 
         setTimeout(alert("loser :("), 500);
-        logDebug("lose")
+        logDebug("lose");
     }
     else{
-        logDebug("continuing")
+        logDebug("continuing");
     }
 
 }
@@ -194,3 +194,49 @@ function submitGuess() {
 // }
 
 
+function checkGuess(guess, tiles) {
+    logDebug(`🔍 Starting analysis for "${guess}"`, 'info');
+    
+    // TODO: Split TARGET_WORD and guess into arrays
+    const target = TARGET_WORD.split("");
+    const guessArray = guess.split("");
+    const result = ['absent', 'absent', 'absent', 'absent', 'absent'];
+    
+    // STEP 1: Find exact matches
+    for (let i = 0; i < 5; i++) {
+        if (target[i] === guessArray[i]) {
+            logDebug("it works")
+            result[i] = 'correct';
+            target[i] = null;
+            guessArray[i] = null;
+        }
+    }
+    
+    // STEP 2: Find wrong position matches  
+    for (let i = 0; i < 5; i++) {
+        if (guessArray[i] !== null) { // only check unused letters
+            if(target.includes(guessArray[i])){
+                result[i] = 'present';
+                const targetIndex = target.indexOf(guessArray[i]);
+                target[targetIndex] = null;
+            }
+            else{
+                result[i] = 'wrong'
+            }
+            
+        }
+    }
+    
+    tiles.forEach((tile, index) => {
+        // Use setTimeout to create a staggered, one-by-one reveal effect
+        setTimeout(() => {
+            const status = result[index];
+            tile.classList.add(status);
+        }, index * 300); // Delay each tile flip by 300ms
+    });
+
+    // It's still good practice to return the final result array
+    return result;
+
+
+}
